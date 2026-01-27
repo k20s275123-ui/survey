@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ご来店アンケート | 焼肉ホルモン とくちゃん</title>
+  <meta name="description" content="ご来店アンケート（約1分）" />
+  <style>
+    :root{
+      --bg0:#0b0706;
+      --bg1:#120a08;
+      --card: rgba(255,255,255,.06);
+      --line: rgba(255,255,255,.14);
+      --text:#fff7f1;
+      --muted: rgba(255,247,241,.72);
+      --accent:#d8392b;      /* 焼肉の赤 */
+      --accent2:#ffd24a;     /* レモン */
+      --ok:#46d18a;
+      --danger:#ff6a6a;
+      --shadow: 0 16px 50px rgba(0,0,0,.55);
+      --radius: 16px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:20px;
+      background:
+        radial-gradient(900px 520px at 20% 0%, rgba(216,57,43,.22), transparent 55%),
+        radial-gradient(850px 520px at 85% 10%, rgba(255,210,74,.16), transparent 55%),
+        radial-gradient(900px 620px at 60% 120%, rgba(255,255,255,.06), transparent 50%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+    }
+
+    /* うっすら網っぽいパターン */
+    body:before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.10;
+      background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,.12) 0 1px, transparent 1px 28px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.10) 0 1px, transparent 1px 28px);
+      mix-blend-mode:overlay;
+    }
+
+    .wrap{ width:min(820px, 100%); }
+
+    header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:12px;
+    }
+
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .brandTop{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .logoMark{
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      background:
+        radial-gradient(14px 14px at 30% 30%, rgba(255,210,74,.9), transparent 60%),
+        radial-gradient(18px 18px at 70% 70%, rgba(216,57,43,.9), transparent 62%),
+        rgba(255,255,255,.08);
+      border:1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(0,0,0,.35);
+    }
+
+    h1{
+      margin:0;
+      font-size:18px;
+      letter-spacing:.02em;
+      line-height:1.3;
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.65;
+    }
+
+    .badgeRow{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      color:var(--muted);
+      white-space:nowrap;
+    }
+
+    .pill strong{
+      color:var(--text);
+      font-weight:800;
+    }
+
+    .card{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border-radius: var(--radius);
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar{
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .progress{
+      flex:1;
+      height:10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width .25s ease;
+    }
+
+    .content{ padding:16px; }
+    .qtitle{
+      margin:0 0 10px 0;
+      font-size:18px;
+      line-height:1.55;
+      letter-spacing:.01em;
+    }
+    .hint{
+      margin:0 0 14px 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.75;
+    }
+
+    .field{
+      border:1px solid rgba(255,255,255,.16);
+      border-radius: 14px;
+      padding:14px;
+      background: rgba(0,0,0,.20);
+    }
+
+    .options{
+      display:grid;
+      gap:10px;
+    }
+
+    label.opt{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      cursor:pointer;
+      transition: transform .06s ease, border-color .15s ease, background .15s ease;
+    }
+    label.opt:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.20);
+      background: rgba(255,255,255,.06);
+    }
+
+    input[type="radio"], input[type="checkbox"]{
+      margin-top: 2px;
+      accent-color: var(--accent2);
+      transform: translateY(1px);
+    }
+
+    textarea, select, input[type="text"]{
+      width:100%;
+      color:var(--text);
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 14px;
+      padding:12px 12px;
+      font-size:14px;
+      outline:none;
+    }
+    textarea{ min-height: 120px; resize: vertical; }
+    textarea:focus, select:focus, input[type="text"]:focus{
+      border-color: rgba(255,210,74,.55);
+      box-shadow: 0 0 0 3px rgba(255,210,74,.18);
+    }
+
+    .error{
+      margin-top:10px;
+      font-size:13px;
+      color: var(--danger);
+      display:none;
+    }
+
+    .footer{
+      padding:14px 16px;
+      border-top:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .small{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    .btns{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    button, a.btnlink{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      padding:11px 14px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-size:14px;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      transition: transform .06s ease, background .15s ease, border-color .15s ease;
+      user-select:none;
+    }
+    button:hover, a.btnlink:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.24);
+    }
+    button:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
+
+    button.primary, a.btnlink.primary{
+      background: linear-gradient(90deg, rgba(216,57,43,.92), rgba(255,210,74,.92));
+      border-color: rgba(255,255,255,.18);
+      color:#120a08;
+      font-weight:900;
+      letter-spacing:.02em;
+    }
+    button.primary:hover, a.btnlink.primary:hover{
+      background: linear-gradient(90deg, rgba(216,57,43,1), rgba(255,210,74,1));
+    }
+
+    .kvs{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+    .kv{
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 14px;
+      padding:12px;
+      background: rgba(0,0,0,.16);
+    }
+    .k{
+      margin:0 0 6px 0;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .v{
+      margin:0;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.72);
+      border: 1px solid rgba(255,255,255,.18);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 999px;
+      font-size:13px;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+      box-shadow: 0 12px 24px rgba(0,0,0,.4);
+    }
+    .toast.show{
+      opacity:1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="brandTop">
+          <div class="logoMark" aria-hidden="true"></div>
+          <div>
+            <h1>ご来店アンケート</h1>
+            <p class="sub">約1分で完了。次回もっと美味しく、もっと楽しくするために使います。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="badgeRow">
+        <div class="pill">所要 <strong>約1分</strong></div>
+        <div class="pill" id="stepText">1 / 6</div>
+      </div>
+    </header>
+
+    <div class="card" role="main" aria-live="polite">
+      <div class="topbar">
+        <div class="pill">進捗</div>
+        <div class="progress" aria-label="progress">
+          <div class="bar" id="bar"></div>
+        </div>
+      </div>
+
+      <div class="content">
+        <h2 class="qtitle" id="qTitle"></h2>
+        <p class="hint" id="qHint"></p>
+
+        <div class="field" id="field"></div>
+        <div class="error" id="error">未回答の項目があります。</div>
+      </div>
+
+      <div class="footer">
+        <p class="small" id="note">※ 個人が特定される情報（氏名・連絡先など）は入力しないでください。</p>
+        <div class="btns">
+          <button id="backBtn" type="button">戻る</button>
+          <button id="nextBtn" class="primary" type="button">次へ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ここを店舗のGoogle口コミ投稿リンクに差し替え
+    // 例：Googleビジネスプロフィール管理画面の【レビューを依頼】で出るURL
+    // もしくは Place ID 方式：https://search.google.com/local/writereview?placeid=（PlaceID）
+    const googleReviewUrl = "https://example.com/google-review-link";
+
+    const steps = [
+      {
+        id: "q1",
+        title: "1. 今日の満足度を教えてください",
+        hint: "5が最高、1が最低です。",
+        type: "radio",
+        required: true,
+        options: [
+          { value: "5", label: "5：最高！また来たい" },
+          { value: "4", label: "4：満足" },
+          { value: "3", label: "3：ふつう" },
+          { value: "2", label: "2：ちょい不満" },
+          { value: "1", label: "1：不満" }
+        ]
+      },
+      {
+        id: "q2",
+        title: "2. どのメニューが良かったですか（複数選択OK）",
+        hint: "迷ったら印象に残ったものを選んでください。",
+        type: "checkbox",
+        required: true,
+        options: [
+          { value: "tan", label: "タン系" },
+          { value: "harami", label: "ハラミ系" },
+          { value: "karubi", label: "カルビ系" },
+          { value: "hormone", label: "ホルモン系" },
+          { value: "side", label: "冷麺・ビビンバなど" },
+          { value: "drink", label: "レモンサワーなどドリンク" }
+        ]
+      },
+      {
+        id: "q3",
+        title: "3. スタッフ対応はいかがでしたか",
+        hint: "当てはまるものを選んでください。",
+        type: "radio",
+        required: true,
+        options: [
+          { value: "great", label: "最高（気持ちよく過ごせた）" },
+          { value: "good", label: "良い" },
+          { value: "normal", label: "ふつう" },
+          { value: "bad", label: "改善してほしい" }
+        ]
+      },
+      {
+        id: "q4",
+        title: "4. 店内の雰囲気はどうでしたか",
+        hint: "活気・清潔感・居心地など、体感でOKです。",
+        type: "radio",
+        required: true,
+        options: [
+          { value: "waku", label: "ワクワクした（また来たい）" },
+          { value: "ok", label: "良い" },
+          { value: "neutral", label: "ふつう" },
+          { value: "no", label: "落ち着かなかった" }
+        ]
+      },
+      {
+        id: "q5",
+        title: "5. ひとことお願いします（任意）",
+        hint: "よかった点・改善点、どちらでも助かります。",
+        type: "textarea",
+        required: false
+      },
+      {
+        id: "done",
+        title: "ご協力ありがとうございました！",
+        hint: "よければGoogleマップでも口コミを書いてもらえると、めちゃ助かります。",
+        type: "final"
+      }
+    ];
+
+    const state = { index: 0, answers: {} };
+
+    const qTitle = document.getElementById("qTitle");
+    const qHint = document.getElementById("qHint");
+    const field = document.getElementById("field");
+    const error = document.getElementById("error");
+    const bar = document.getElementById("bar");
+    const stepText = document.getElementById("stepText");
+    const backBtn = document.getElementById("backBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const note = document.getElementById("note");
+    const toast = document.getElementById("toast");
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1200);
+    }
+
+    function setProgress(){
+      const total = steps.length;
+      const current = state.index + 1;
+      stepText.textContent = current + " / " + total;
+      const pct = Math.round((current - 1) / (total - 1) * 100);
+      bar.style.width = pct + "%";
+    }
+
+    function showError(show){
+      error.style.display = show ? "block" : "none";
+    }
+
+    function render(){
+      showError(false);
+      setProgress();
+
+      const step = steps[state.index];
+      qTitle.textContent = step.title;
+      qHint.textContent = step.hint || "";
+
+      backBtn.disabled = state.index === 0;
+      note.style.display = step.type === "final" ? "none" : "block";
+      nextBtn.textContent = step.type === "final" ? "最初へ戻る" : (state.index === steps.length - 2 ? "送信" : "次へ");
+
+      field.innerHTML = "";
+
+      if(step.type === "radio"){
+        const value = state.answers[step.id] ?? "";
+        const wrap = document.createElement("div");
+        wrap.className = "options";
+        step.options.forEach((opt, i) => {
+          const label = document.createElement("label");
+          label.className = "opt";
+          label.innerHTML =
+            '<input type="radio" name="' + escapeHtml(step.id) + '" value="' + escapeHtml(opt.value) + '" ' + (value === opt.value ? "checked" : "") + " />" +
+            "<div>" + escapeHtml(opt.label) + "</div>";
+          wrap.appendChild(label);
+        });
+        field.appendChild(wrap);
+      }
+
+      if(step.type === "checkbox"){
+        const values = state.answers[step.id] ?? [];
+        const wrap = document.createElement("div");
+        wrap.className = "options";
+        step.options.forEach((opt) => {
+          const checked = values.includes(opt.value);
+          const label = document.createElement("label");
+          label.className = "opt";
+          label.innerHTML =
+            '<input type="checkbox" value="' + escapeHtml(opt.value) + '" ' + (checked ? "checked" : "") + " />" +
+            "<div>" + escapeHtml(opt.label) + "</div>";
+          wrap.appendChild(label);
+        });
+        field.appendChild(wrap);
+      }
+
+      if(step.type === "textarea"){
+        const v = state.answers[step.id] ?? "";
+        const ta = document.createElement("textarea");
+        ta.placeholder = "例：タンが最高。レモンサワーの注ぎ方が分かりやすいと嬉しい、など";
+        ta.value = v;
+        ta.addEventListener("input", () => state.answers[step.id] = ta.value);
+        field.appendChild(ta);
+      }
+
+      if(step.type === "final"){
+        const kvs = document.createElement("div");
+        kvs.className = "kvs";
+
+        const order = ["q1","q2","q3","q4","q5"];
+        order.forEach((k) => {
+          const stepDef = steps.find(s => s.id === k);
+          const box = document.createElement("div");
+          box.className = "kv";
+          const kk = document.createElement("p");
+          kk.className = "k";
+          kk.textContent = stepDef ? stepDef.title : k;
+
+          const vv = document.createElement("p");
+          vv.className = "v";
+          let a = state.answers[k];
+          if(Array.isArray(a)) a = a.join("、");
+          if(a === undefined || a === null || String(a).trim() === "") a = "未入力";
+          vv.textContent = String(a);
+
+          box.appendChild(kk);
+          box.appendChild(vv);
+          kvs.appendChild(box);
+        });
+
+        const cta = document.createElement("div");
+        cta.className = "kv";
+        cta.innerHTML =
+          '<p class="k">Googleマップで口コミを書く</p>' +
+          '<p class="v">星とひとことだけでもOKです。次のお客さんの背中押しになります。</p>' +
+          '<div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">' +
+            '<a class="btnlink primary" href="' + escapeHtml(googleReviewUrl) + '" target="_blank" rel="noopener">口コミ投稿へ</a>' +
+            '<button type="button" id="copyBtn">リンクをコピー</button>' +
+          "</div>" +
+          '<p class="small" style="margin-top:10px;">Googleにログインしていない場合、ログインが必要になることがあります。</p>';
+
+        field.appendChild(kvs);
+        field.appendChild(cta);
+
+        document.getElementById("copyBtn").addEventListener("click", async () => {
+          try{
+            await navigator.clipboard.writeText(googleReviewUrl);
+            showToast("コピーしました");
+          }catch(e){
+            alert("コピーできませんでした。手動でコピーしてください。");
+          }
+        });
+      }
+    }
+
+    function readCurrentAnswer(){
+      const step = steps[state.index];
+
+      if(step.type === "radio"){
+        const checked = field.querySelector('input[type="radio"]:checked');
+        state.answers[step.id] = checked ? checked.value : "";
+      }
+
+      if(step.type === "checkbox"){
+        const checked = [...field.querySelectorAll('input[type="checkbox"]:checked')].map(x => x.value);
+        state.answers[step.id] = checked;
+      }
+    }
+
+    function isValidCurrent(){
+      const step = steps[state.index];
+      if(!step.required) return true;
+
+      const a = state.answers[step.id];
+      if(step.type === "radio") return typeof a === "string" && a.trim() !== "";
+      if(step.type === "checkbox") return Array.isArray(a) && a.length > 0;
+      if(step.type === "textarea") return typeof a === "string" && a.trim() !== "";
+      return true;
+    }
+
+    function goNext(){
+      const step = steps[state.index];
+
+      if(step.type === "final"){
+        state.index = 0;
+        render();
+        return;
+      }
+
+      readCurrentAnswer();
+
+      if(!isValidCurrent()){
+        showError(true);
+        return;
+      }
+
+      // 送信（デモではローカル保存）
+      if(state.index === steps.length - 2){
+        const payload = { submittedAt: new Date().toISOString(), answers: state.answers };
+        try{ localStorage.setItem("tokuchan_survey_latest", JSON.stringify(payload)); }catch(e){}
+        state.index++;
+        render();
+        return;
+      }
+
+      state.index = Math.min(state.index + 1, steps.length - 1);
+      render();
+    }
+
+    function goBack(){
+      if(state.index === 0) return;
+      state.index--;
+      render();
+    }
+
+    backBtn.addEventListener("click", goBack);
+    nextBtn.addEventListener("click", goNext);
+    render();
+  </script>
+</body>
+</html>
