@@ -13,9 +13,8 @@
       --line: rgba(255,255,255,.14);
       --text:#fff7f1;
       --muted: rgba(255,247,241,.72);
-      --accent:#d8392b;      /* 焼肉の赤 */
-      --accent2:#ffd24a;     /* レモン */
-      --ok:#46d18a;
+      --accent:#d8392b;
+      --accent2:#ffd24a;
       --danger:#ff6a6a;
       --shadow: 0 16px 50px rgba(0,0,0,.55);
       --radius: 16px;
@@ -35,8 +34,6 @@
         radial-gradient(900px 620px at 60% 120%, rgba(255,255,255,.06), transparent 50%),
         linear-gradient(180deg, var(--bg0), var(--bg1));
     }
-
-    /* うっすら網っぽいパターン */
     body:before{
       content:"";
       position:fixed;
@@ -48,9 +45,7 @@
         repeating-linear-gradient(0deg, rgba(255,255,255,.10) 0 1px, transparent 1px 28px);
       mix-blend-mode:overlay;
     }
-
-    .wrap{ width:min(820px, 100%); }
-
+    .wrap{ width:min(860px, 100%); }
     header{
       display:flex;
       align-items:flex-start;
@@ -58,20 +53,12 @@
       gap:14px;
       margin-bottom:12px;
     }
-
-    .brand{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-
     .brandTop{
       display:flex;
       align-items:center;
       gap:10px;
       flex-wrap:wrap;
     }
-
     .logoMark{
       width:40px;
       height:40px;
@@ -83,7 +70,6 @@
       border:1px solid var(--line);
       box-shadow: 0 10px 24px rgba(0,0,0,.35);
     }
-
     h1{
       margin:0;
       font-size:18px;
@@ -95,15 +81,14 @@
       color:var(--muted);
       font-size:13px;
       line-height:1.65;
+      margin-top:6px;
     }
-
     .badgeRow{
       display:flex;
       align-items:center;
       gap:8px;
       flex-wrap:wrap;
     }
-
     .pill{
       display:inline-flex;
       align-items:center;
@@ -116,7 +101,6 @@
       color:var(--muted);
       white-space:nowrap;
     }
-
     .pill strong{
       color:var(--text);
       font-weight:800;
@@ -130,7 +114,6 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
-
     .topbar{
       padding:14px 16px;
       display:flex;
@@ -139,7 +122,6 @@
       gap:12px;
       border-bottom:1px solid var(--line);
     }
-
     .progress{
       flex:1;
       height:10px;
@@ -169,19 +151,16 @@
       font-size:13px;
       line-height:1.75;
     }
-
     .field{
       border:1px solid rgba(255,255,255,.16);
       border-radius: 14px;
       padding:14px;
       background: rgba(0,0,0,.20);
     }
-
     .options{
       display:grid;
       gap:10px;
     }
-
     label.opt{
       display:flex;
       gap:10px;
@@ -198,14 +177,12 @@
       border-color: rgba(255,255,255,.20);
       background: rgba(255,255,255,.06);
     }
-
     input[type="radio"], input[type="checkbox"]{
       margin-top: 2px;
       accent-color: var(--accent2);
       transform: translateY(1px);
     }
-
-    textarea, select, input[type="text"]{
+    textarea{
       width:100%;
       color:var(--text);
       background: rgba(255,255,255,.04);
@@ -214,9 +191,10 @@
       padding:12px 12px;
       font-size:14px;
       outline:none;
+      min-height: 120px;
+      resize: vertical;
     }
-    textarea{ min-height: 120px; resize: vertical; }
-    textarea:focus, select:focus, input[type="text"]:focus{
+    textarea:focus{
       border-color: rgba(255,210,74,.55);
       box-shadow: 0 0 0 3px rgba(255,210,74,.18);
     }
@@ -237,20 +215,17 @@
       gap:10px;
       flex-wrap:wrap;
     }
-
     .small{
       margin:0;
       color:var(--muted);
       font-size:12px;
       line-height:1.6;
     }
-
     .btns{
       display:flex;
       gap:10px;
       align-items:center;
     }
-
     button, a.btnlink{
       appearance:none;
       border:1px solid rgba(255,255,255,.16);
@@ -308,6 +283,52 @@
       line-height:1.6;
     }
 
+    /* 最終ページのCTAを上部に大きく */
+    .ctaBig{
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,.18);
+      background:
+        radial-gradient(600px 260px at 20% 0%, rgba(255,210,74,.22), transparent 60%),
+        radial-gradient(600px 260px at 85% 15%, rgba(216,57,43,.22), transparent 60%),
+        rgba(0,0,0,.18);
+    }
+    .ctaBigTitle{
+      margin:0 0 8px 0;
+      font-size:16px;
+      letter-spacing:.02em;
+    }
+    .ctaBigText{
+      margin:0 0 12px 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.75;
+    }
+    a.reviewBtn{
+      width: 100%;
+      padding: 16px 14px;
+      border-radius: 18px;
+      font-size: 16px;
+      font-weight: 1000;
+      letter-spacing: .03em;
+      background: linear-gradient(90deg, rgba(255,210,74,1), rgba(216,57,43,1));
+      color: #120a08;
+      border: 1px solid rgba(255,255,255,.20);
+      box-shadow: 0 18px 45px rgba(0,0,0,.45);
+    }
+    a.reviewBtn:hover{
+      transform: translateY(-1px) scale(1.01);
+      filter: brightness(1.02);
+    }
+    .reviewSubRow{
+      margin-top:10px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+
     .toast{
       position:fixed;
       left:50%;
@@ -333,13 +354,11 @@
 <body>
   <div class="wrap">
     <header>
-      <div class="brand">
-        <div class="brandTop">
-          <div class="logoMark" aria-hidden="true"></div>
-          <div>
-            <h1>ご来店アンケート</h1>
-            <p class="sub">約1分で完了。次回もっと美味しく、もっと楽しくするために使います。</p>
-          </div>
+      <div class="brandTop">
+        <div class="logoMark" aria-hidden="true"></div>
+        <div>
+          <h1>ご来店アンケート</h1>
+          <p class="sub">約1分で完了。次回もっと美味しく、もっと楽しくするために使います。</p>
         </div>
       </div>
 
@@ -378,10 +397,17 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    // ここを店舗のGoogle口コミ投稿リンクに差し替え
-    // 例：Googleビジネスプロフィール管理画面の【レビューを依頼】で出るURL
-    // もしくは Place ID 方式：https://search.google.com/local/writereview?placeid=（PlaceID）
-    const googleReviewUrl = "https://g.page/r/CYTVRc-vMnmtEBM/review";
+    // 口コミリンク（指定URLに固定）
+    const GOOGLE_REVIEW_URL = "https://g.page/r/CYTVRc-vMnmtEBM/review";
+
+    // Apps Script WebアプリURL（ここを差し替え）
+    const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbxtWuNzPv9M-kVNe46HDi1VW-UXQLMBgLn7Zznv5QFThB8gFqHLdPv2L0mGUlsrAtg/exec";
+
+    // Apps ScriptのSECRET_TOKENと一致させる
+    const GAS_TOKEN = "tokuchan_juso_survey";
+
+    // クライアントバージョン（GAS側のmeta_versionに入る）
+    const CLIENT_VERSION = "tokuchan-survey-v1";
 
     const steps = [
       {
@@ -449,7 +475,7 @@
       {
         id: "done",
         title: "ご協力ありがとうございました！",
-        hint: "よければGoogleマップでも口コミを書いてもらえると、めちゃ助かります。",
+        hint: "まずはGoogleマップの口コミ投稿をお願いします。",
         type: "final"
       }
     ];
@@ -503,8 +529,14 @@
       qHint.textContent = step.hint || "";
 
       backBtn.disabled = state.index === 0;
-      note.style.display = step.type === "final" ? "none" : "block";
-      nextBtn.textContent = step.type === "final" ? "最初へ戻る" : (state.index === steps.length - 2 ? "送信" : "次へ");
+
+      if (step.type === "final") {
+        note.style.display = "none";
+        nextBtn.textContent = "最初へ戻る";
+      } else {
+        note.style.display = "block";
+        nextBtn.textContent = (state.index === steps.length - 2) ? "送信" : "次へ";
+      }
 
       field.innerHTML = "";
 
@@ -512,7 +544,7 @@
         const value = state.answers[step.id] ?? "";
         const wrap = document.createElement("div");
         wrap.className = "options";
-        step.options.forEach((opt, i) => {
+        step.options.forEach((opt) => {
           const label = document.createElement("label");
           label.className = "opt";
           label.innerHTML =
@@ -549,6 +581,17 @@
       }
 
       if(step.type === "final"){
+        const cta = document.createElement("div");
+        cta.className = "ctaBig";
+        cta.innerHTML =
+          '<p class="ctaBigTitle">まずは口コミ投稿へ</p>' +
+          '<p class="ctaBigText">星とひとことだけでもOKです。次のお客さんの背中押しになります。</p>' +
+          '<a class="btnlink reviewBtn" href="' + escapeHtml(GOOGLE_REVIEW_URL) + '" target="_blank" rel="noopener">Google口コミを書く</a>' +
+          '<div class="reviewSubRow">' +
+            '<button type="button" id="copyBtn">口コミリンクをコピー</button>' +
+            '<span class="small">ログインが必要な場合があります</span>' +
+          '</div>';
+
         const kvs = document.createElement("div");
         kvs.className = "kvs";
 
@@ -557,6 +600,7 @@
           const stepDef = steps.find(s => s.id === k);
           const box = document.createElement("div");
           box.className = "kv";
+
           const kk = document.createElement("p");
           kk.className = "k";
           kk.textContent = stepDef ? stepDef.title : k;
@@ -573,23 +617,12 @@
           kvs.appendChild(box);
         });
 
-        const cta = document.createElement("div");
-        cta.className = "kv";
-        cta.innerHTML =
-          '<p class="k">Googleマップで口コミを書く</p>' +
-          '<p class="v">星とひとことだけでもOKです。次のお客さんの背中押しになります。</p>' +
-          '<div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">' +
-            '<a class="btnlink primary" href="' + escapeHtml(googleReviewUrl) + '" target="_blank" rel="noopener">口コミ投稿へ</a>' +
-            '<button type="button" id="copyBtn">リンクをコピー</button>' +
-          "</div>" +
-          '<p class="small" style="margin-top:10px;">Googleにログインしていない場合、ログインが必要になることがあります。</p>';
-
-        field.appendChild(kvs);
         field.appendChild(cta);
+        field.appendChild(kvs);
 
         document.getElementById("copyBtn").addEventListener("click", async () => {
           try{
-            await navigator.clipboard.writeText(googleReviewUrl);
+            await navigator.clipboard.writeText(GOOGLE_REVIEW_URL);
             showToast("コピーしました");
           }catch(e){
             alert("コピーできませんでした。手動でコピーしてください。");
@@ -623,7 +656,49 @@
       return true;
     }
 
-    function goNext(){
+    function getClientId_(){
+      const key = "tokuchan_client_id";
+      let id = "";
+      try { id = localStorage.getItem(key) || ""; } catch(e) {}
+      if (!id) {
+        id = (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + "_" + Math.random().toString(16).slice(2);
+        try { localStorage.setItem(key, id); } catch(e) {}
+      }
+      return id;
+    }
+
+    async function submitToSheet_(){
+      if (!GAS_ENDPOINT || GAS_ENDPOINT.includes("PASTE_YOUR_GAS_WEBAPP_URL_HERE")) {
+        throw new Error("GAS_ENDPOINT is not set");
+      }
+
+      const payload = {
+        token: GAS_TOKEN,
+        answers: state.answers,
+        meta: {
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+          pageUrl: location.href,
+          referrer: document.referrer || "",
+          clientId: getClientId_(),
+          version: CLIENT_VERSION
+        }
+      };
+
+      const res = await fetch(GAS_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const json = await res.json().catch(() => null);
+      if (!json || !json.ok) {
+        throw new Error("submit_failed");
+      }
+    }
+
+    async function goNext(){
       const step = steps[state.index];
 
       if(step.type === "final"){
@@ -639,12 +714,27 @@
         return;
       }
 
-      // 送信（デモではローカル保存）
+      // 送信タイミング
       if(state.index === steps.length - 2){
-        const payload = { submittedAt: new Date().toISOString(), answers: state.answers };
-        try{ localStorage.setItem("tokuchan_survey_latest", JSON.stringify(payload)); }catch(e){}
-        state.index++;
-        render();
+        const originalText = nextBtn.textContent;
+        nextBtn.textContent = "送信中...";
+        nextBtn.disabled = true;
+        backBtn.disabled = true;
+
+        try{
+          await submitToSheet_();
+          showToast("送信しました");
+          state.index++;
+          render();
+        }catch(e){
+          showToast("送信に失敗しました");
+          showError(true);
+          error.textContent = "送信に失敗しました。通信状況を確認して、もう一度送信してください。";
+        }finally{
+          nextBtn.textContent = originalText;
+          nextBtn.disabled = false;
+          backBtn.disabled = (state.index === 0);
+        }
         return;
       }
 
