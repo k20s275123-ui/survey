@@ -274,7 +274,7 @@
         ]
       },
       { id:"q5", title:"5. ひとことお願いします（任意）", hint:"よかった点・改善点、どちらでも助かります。", type:"textarea", required:false },
-      { id:"done", title:"ご協力ありがとうございました！", hint:"まずはGoogleマップの口コミ投稿をお願いします。", type:"final" }
+      { id:"done", title:"アンケートのご協力ありがとうございました！",  type:"final" }
     ];
 
     const state = { index: 0, answers: {} };
@@ -378,9 +378,9 @@
         const cta = document.createElement("div");
         cta.className = "ctaBig";
         cta.innerHTML =
-          '<p class="ctaBigTitle">まずは口コミ投稿へ</p>' +
-          '<p class="ctaBigText">星とひとことだけでもOKです。スタッフの励みになります。</p>' +
-          '<a class="btnlink reviewBtn" href="' + escapeHtml(GOOGLE_REVIEW_URL) + '" target="_blank" rel="noopener">Google口コミを書く</a>' +
+          '<p class="ctaBigTitle">クチコミ投稿へ</p>' +
+          '<p class="ctaBigText">皆様のお声がスタッフの励みになります。</p>' +
+          '<a class="btnlink reviewBtn" href="' + escapeHtml(GOOGLE_REVIEW_URL) + '" target="_blank" rel="noopener">クチコミ投稿でドリンク無料！</a>' +
           '<div class="reviewSubRow">' +
             '<button type="button" id="copyBtn">口コミリンクをコピー</button>' +
             '<span class="small">ログインが必要な場合があります</span>' +
