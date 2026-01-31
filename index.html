@@ -196,7 +196,7 @@
 
       <div class="badgeRow">
         <div class="pill">所要 <strong>約1分</strong></div>
-        <div class="pill" id="stepText">1 / 6</div>
+        <div class="pill" id="stepText">1 / 7</div>
       </div>
     </header>
 
@@ -227,15 +227,21 @@
 
   <script>
     const GOOGLE_REVIEW_URL = "https://g.page/r/CYTVRc-vMnmtEBM/review";
-
-    // ここだけ差し替え：GASのWebアプリURL（/execのやつ）
     const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyWtiN98arxb2yUQHKY92XG6oCMbf9WssJvsDlnuyUGImd3zNYqoYHz2Mxk19AATEw/exec";
-
     const GAS_TOKEN = "tokuchan_juso_survey";
     const CLIENT_VERSION = "tokuchan-survey-v1";
 
     const steps = [
-      { id:"q1", title:"1. 今日の満足度を教えてください", hint:"5が最高、1が最低です。", type:"radio", required:true,
+      { id:"store", title:"1. 本日お越しの店舗を教えてください", hint:"該当する店舗を選択してください。", type:"radio", required:true,
+        options:[
+          { value:"十三店", label:"十三店" },
+          { value:"淡路店", label:"淡路店" },
+          { value:"庄内店", label:"庄内店" },
+          { value:"三国店", label:"三国店" },
+          { value:"野田店", label:"野田店" }
+        ]
+      },
+      { id:"q1", title:"2. 今日の満足度を教えてください", hint:"5が最高、1が最低です。", type:"radio", required:true,
         options:[
           { value:"とても良い", label:"5：とても良い" },
           { value:"良い", label:"4：良い" },
@@ -244,7 +250,7 @@
           { value:"不満", label:"1：不満" }
         ]
       },
-      { id:"q2", title:"2. どのメニューが良かったですか（複数選択OK）", hint:"迷ったら印象に残ったものを選んでください。", type:"checkbox", required:true,
+      { id:"q2", title:"3. どのメニューが良かったですか（複数選択OK）", hint:"迷ったら印象に残ったものを選んでください。", type:"checkbox", required:true,
         options:[
           { value:"厚切り牛タン", label:"厚切り牛タン" },
           { value:"元祖やみつきメニュー", label:"元祖やみつきメニュー" },
@@ -254,7 +260,7 @@
           { value:"その他", label:"その他" }
         ]
       },
-      { id:"q3", title:"3. スタッフ対応はいかがでしたか", hint:"当てはまるものを選んでください。", type:"radio", required:true,
+      { id:"q3", title:"4. スタッフ対応はいかがでしたか", hint:"当てはまるものを選んでください。", type:"radio", required:true,
         options:[
           { value:"とても良い", label:"5：とても良い" },
           { value:"良い", label:"4：良い" },
@@ -263,7 +269,7 @@
           { value:"不満", label:"1：不満" }
         ]
       },
-      { id:"q4", title:"4. 店内の雰囲気はどうでしたか", hint:"活気・清潔感・居心地など、体感でOKです。", type:"radio", required:true,
+      { id:"q4", title:"5. 店内の雰囲気はどうでしたか", hint:"活気・清潔感・居心地など、体感でOKです。", type:"radio", required:true,
         options:[
           { value:"とても良い", label:"5：とても良い" },
           { value:"良い", label:"4：良い" },
@@ -272,8 +278,8 @@
           { value:"不満", label:"1：不満" }
         ]
       },
-      { id:"q5", title:"5. ひとことお願いします（任意）", hint:"よかった点・改善点、どちらでも助かります。", type:"textarea", required:false },
-      { id:"done", title:"ご協力ありがとうございました！",  type:"final" }
+      { id:"q5", title:"6. ひとことお願いします（任意）", hint:"よかった点・改善点、どちらでも助かります。", type:"textarea", required:false },
+      { id:"done", title:"ご協力ありがとうございました！", type:"final" }
     ];
 
     const state = { index: 0, answers: {} };
@@ -324,7 +330,7 @@
 
       if (step.type === "final") {
         note.style.display = "none";
-        btns.style.display = "none";   // 最終ページはボタン類を全部非表示
+        btns.style.display = "none";
       } else {
         note.style.display = "block";
         btns.style.display = "flex";
@@ -376,7 +382,7 @@
 
       if(step.type === "final"){
         const q1 = String(state.answers.q1 || "");
-        const isBad = (q1 === "1" || q1 === "2");
+        const isBad = (q1 === "少し不満" || q1 === "不満");
 
         const cta = document.createElement("div");
         cta.className = "ctaBig";
@@ -395,7 +401,7 @@
         const kvs = document.createElement("div");
         kvs.className = "kvs";
 
-        const order = ["q1","q2","q3","q4","q5"];
+        const order = ["store","q1","q2","q3","q4","q5"];
         order.forEach((k) => {
           const stepDef = steps.find(s => s.id === k);
           const box = document.createElement("div");
@@ -457,10 +463,6 @@
     }
 
     async function submitToSheet_(){
-      if (!GAS_ENDPOINT || GAS_ENDPOINT.includes("PASTE_YOUR_GAS_WEBAPP_URL_HERE")) {
-        throw new Error("GAS_ENDPOINT is not set");
-      }
-
       const payload = {
         token: GAS_TOKEN,
         answers: state.answers,
@@ -471,7 +473,7 @@
           pageUrl: location.href,
           referrer: document.referrer || "",
           clientId: getClientId_(),
-          version: "tokuchan-survey-v1"
+          version: CLIENT_VERSION
         }
       };
 
@@ -484,8 +486,6 @@
     }
 
     async function goNext(){
-      const step = steps[state.index];
-
       readCurrentAnswer();
 
       if(!isValidCurrent()){
