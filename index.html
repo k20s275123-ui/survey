@@ -190,7 +190,7 @@
         <div class="logoMark" aria-hidden="true"></div>
         <div>
           <h1>ご来店アンケート</h1>
-          <p class="sub">約1分で完了。次回もっと美味しく、もっと楽しくするために使います。</p>
+          <p class="sub">約1分で完了。次回もっと美味しく、もっと楽しんでいただく為に使用いたします。</p>
         </div>
       </div>
 
@@ -237,41 +237,43 @@
     const steps = [
       { id:"q1", title:"1. 今日の満足度を教えてください", hint:"5が最高、1が最低です。", type:"radio", required:true,
         options:[
-          { value:"5", label:"5：最高！また来たい" },
-          { value:"4", label:"4：満足" },
-          { value:"3", label:"3：ふつう" },
-          { value:"2", label:"2：ちょい不満" },
-          { value:"1", label:"1：不満" }
+          { value:"とても良い", label:"5：とても良い" },
+          { value:"良い", label:"4：良い" },
+          { value:"普通", label:"3：普通" },
+          { value:"少し不満", label:"2：少し不満" },
+          { value:"不満", label:"1：不満" }
         ]
       },
       { id:"q2", title:"2. どのメニューが良かったですか（複数選択OK）", hint:"迷ったら印象に残ったものを選んでください。", type:"checkbox", required:true,
         options:[
-          { value:"tan", label:"タン系" },
-          { value:"harami", label:"ハラミ系" },
-          { value:"karubi", label:"カルビ系" },
-          { value:"hormone", label:"ホルモン系" },
-          { value:"side", label:"冷麺・ビビンバなど" },
-          { value:"drink", label:"レモンサワーなどドリンク" }
+          { value:"厚切り牛タン", label:"厚切り牛タン" },
+          { value:"元祖やみつきメニュー", label:"元祖やみつきメニュー" },
+          { value:"和牛カルビ", label:"和牛カルビ" },
+          { value:"ホルモン", label:"ホルモン" },
+          { value:"サイドメニュー", label:"サイドメニュー" },
+          { value:"その他", label:"その他" }
         ]
       },
       { id:"q3", title:"3. スタッフ対応はいかがでしたか", hint:"当てはまるものを選んでください。", type:"radio", required:true,
         options:[
-          { value:"great", label:"最高（気持ちよく過ごせた）" },
-          { value:"good", label:"良い" },
-          { value:"normal", label:"ふつう" },
-          { value:"bad", label:"改善してほしい" }
+          { value:"とても良い", label:"5：とても良い" },
+          { value:"良い", label:"4：良い" },
+          { value:"普通", label:"3：普通" },
+          { value:"少し不満", label:"2：少し不満" },
+          { value:"不満", label:"1：不満" }
         ]
       },
       { id:"q4", title:"4. 店内の雰囲気はどうでしたか", hint:"活気・清潔感・居心地など、体感でOKです。", type:"radio", required:true,
         options:[
-          { value:"waku", label:"ワクワクした（また来たい）" },
-          { value:"ok", label:"良い" },
-          { value:"neutral", label:"ふつう" },
-          { value:"no", label:"落ち着かなかった" }
+          { value:"とても良い", label:"5：とても良い" },
+          { value:"良い", label:"4：良い" },
+          { value:"普通", label:"3：普通" },
+          { value:"少し不満", label:"2：少し不満" },
+          { value:"不満", label:"1：不満" }
         ]
       },
       { id:"q5", title:"5. ひとことお願いします（任意）", hint:"よかった点・改善点、どちらでも助かります。", type:"textarea", required:false },
-      { id:"done", title:"ご協力ありがとうございました！", hint:"ご意見は必ず改善に活かします。", type:"final" }
+      { id:"done", title:"ご協力ありがとうございました！",  type:"final" }
     ];
 
     const state = { index: 0, answers: {} };
@@ -386,8 +388,8 @@
             '<a class="btnlink reviewBtn" href="' + escapeHtml(GOOGLE_REVIEW_URL) + '" target="_blank" rel="noopener">口コミ投稿でドリンク無料！</a>';
         } else {
           cta.innerHTML =
-            '<p class="ctaBigTitle">率直なご意見ありがとうございます</p>' +
-            '<p class="ctaBigText">よければ【5. ひとこと】に気になった点を書いてもらえると改善に直結します。</p>';
+            '<p class="ctaBigTitle">率直なご意見ありがとうございます。</p>' +
+            '<p class="ctaBigText">いただいたご意見は社内で共有し、改善に努めてまいります。</p>';
         }
 
         const kvs = document.createElement("div");
