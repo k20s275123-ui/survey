@@ -165,7 +165,6 @@
       box-shadow: 0 18px 45px rgba(0,0,0,.45);
     }
     a.reviewBtn:hover{ transform: translateY(-1px) scale(1.01); filter: brightness(1.02); }
-    .reviewSubRow{ margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
 
     .toast{
       position:fixed; left:50%; bottom:18px;
@@ -214,9 +213,9 @@
         <div class="error" id="error">未回答の項目があります。</div>
       </div>
 
-      <div class="footer">
+      <div class="footer" id="footer">
         <p class="small" id="note">※ 個人が特定される情報（氏名・連絡先など）は入力しないでください。</p>
-        <div class="btns">
+        <div class="btns" id="btns">
           <button id="backBtn" type="button">戻る</button>
           <button id="nextBtn" class="primary" type="button">次へ</button>
         </div>
@@ -232,9 +231,7 @@
     // ここだけ差し替え：GASのWebアプリURL（/execのやつ）
     const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyWtiN98arxb2yUQHKY92XG6oCMbf9WssJvsDlnuyUGImd3zNYqoYHz2Mxk19AATEw/exec";
 
-    // GASのSECRET_TOKENと完全一致
     const GAS_TOKEN = "tokuchan_juso_survey";
-
     const CLIENT_VERSION = "tokuchan-survey-v1";
 
     const steps = [
@@ -274,7 +271,7 @@
         ]
       },
       { id:"q5", title:"5. ひとことお願いします（任意）", hint:"よかった点・改善点、どちらでも助かります。", type:"textarea", required:false },
-      { id:"done", title:"アンケートのご協力ありがとうございました！",  type:"final" }
+      { id:"done", title:"ご協力ありがとうございました！", hint:"ご意見は必ず改善に活かします。", type:"final" }
     ];
 
     const state = { index: 0, answers: {} };
@@ -289,6 +286,7 @@
     const nextBtn = document.getElementById("nextBtn");
     const note = document.getElementById("note");
     const toast = document.getElementById("toast");
+    const btns = document.getElementById("btns");
 
     function escapeHtml(str){
       return String(str)
@@ -322,13 +320,13 @@
       qTitle.textContent = step.title;
       qHint.textContent = step.hint || "";
 
-      backBtn.disabled = state.index === 0;
-
       if (step.type === "final") {
         note.style.display = "none";
-        nextBtn.textContent = "最初へ戻る";
+        btns.style.display = "none";   // 最終ページはボタン類を全部非表示
       } else {
         note.style.display = "block";
+        btns.style.display = "flex";
+        backBtn.disabled = (state.index === 0);
         nextBtn.textContent = (state.index === steps.length - 2) ? "送信" : "次へ";
       }
 
@@ -368,23 +366,29 @@
       if(step.type === "textarea"){
         const v = state.answers[step.id] ?? "";
         const ta = document.createElement("textarea");
-        ta.placeholder = "例：タンが最高。レモンサワーの注ぎ方が分かりやすいと嬉しい、など";
+        ta.placeholder = "例：タンが最高。注文の流れがもう少し分かりやすいと嬉しい、など";
         ta.value = v;
         ta.addEventListener("input", () => state.answers[step.id] = ta.value);
         field.appendChild(ta);
       }
 
       if(step.type === "final"){
+        const q1 = String(state.answers.q1 || "");
+        const isBad = (q1 === "1" || q1 === "2");
+
         const cta = document.createElement("div");
         cta.className = "ctaBig";
-        cta.innerHTML =
-          '<p class="ctaBigTitle">クチコミ投稿へ</p>' +
-          '<p class="ctaBigText">皆様のお声がスタッフの励みになります。</p>' +
-          '<a class="btnlink reviewBtn" href="' + escapeHtml(GOOGLE_REVIEW_URL) + '" target="_blank" rel="noopener">クチコミ投稿でドリンク無料！</a>' +
-          '<div class="reviewSubRow">' +
-            '<button type="button" id="copyBtn">口コミリンクをコピー</button>' +
-            '<span class="small">ログインが必要な場合があります</span>' +
-          '</div>';
+
+        if (!isBad) {
+          cta.innerHTML =
+            '<p class="ctaBigTitle">クチコミ投稿へ</p>' +
+            '<p class="ctaBigText">皆様のお声がスタッフの励みになります。</p>' +
+            '<a class="btnlink reviewBtn" href="' + escapeHtml(GOOGLE_REVIEW_URL) + '" target="_blank" rel="noopener">口コミ投稿でドリンク無料！</a>';
+        } else {
+          cta.innerHTML =
+            '<p class="ctaBigTitle">率直なご意見ありがとうございます</p>' +
+            '<p class="ctaBigText">よければ【5. ひとこと】に気になった点を書いてもらえると改善に直結します。</p>';
+        }
 
         const kvs = document.createElement("div");
         kvs.className = "kvs";
@@ -413,15 +417,6 @@
 
         field.appendChild(cta);
         field.appendChild(kvs);
-
-        document.getElementById("copyBtn").addEventListener("click", async () => {
-          try{
-            await navigator.clipboard.writeText(GOOGLE_REVIEW_URL);
-            showToast("コピーしました");
-          }catch(e){
-            alert("コピーできませんでした。手動でコピーしてください。");
-          }
-        });
       }
     }
 
@@ -474,11 +469,10 @@
           pageUrl: location.href,
           referrer: document.referrer || "",
           clientId: getClientId_(),
-          version: CLIENT_VERSION
+          version: "tokuchan-survey-v1"
         }
       };
 
-      // CORS回避のため no-cors + text/plain
       await fetch(GAS_ENDPOINT, {
         method: "POST",
         mode: "no-cors",
@@ -489,12 +483,6 @@
 
     async function goNext(){
       const step = steps[state.index];
-
-      if(step.type === "final"){
-        state.index = 0;
-        render();
-        return;
-      }
 
       readCurrentAnswer();
 
