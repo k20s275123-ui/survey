@@ -226,10 +226,18 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    const GOOGLE_REVIEW_URL = "https://g.page/r/CYTVRc-vMnmtEBM/review";
     const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyWtiN98arxb2yUQHKY92XG6oCMbf9WssJvsDlnuyUGImd3zNYqoYHz2Mxk19AATEw/exec";
     const GAS_TOKEN = "tokuchan_juso_survey";
     const CLIENT_VERSION = "tokuchan-survey-v1";
+
+    // 店舗ごとの口コミリンク（ここを各店舗のreviewリンクに差し替え）
+    const REVIEW_URLS = {
+      "十三店": "https://g.page/r/CYTVRc-vMnmtEBM/review",
+      "淡路店": "https://g.page/r/CXLehy7dRDgKEBM/review",
+      "庄内店": "https://g.page/r/CfXDTteVpyu-EBM/review",
+      "三国店": "https://g.page/r/CVL6WdJYbQ2OEBM/review",
+      "野田店": "https://g.page/r/CW4pdMPMH3pdEBM/review"
+    };
 
     const steps = [
       { id:"store", title:"1. 本日お越しの店舗を教えてください", hint:"該当する店舗を選択してください。", type:"radio", required:true,
@@ -304,11 +312,13 @@
         .replaceAll('"',"&quot;")
         .replaceAll("'","&#039;");
     }
+
     function showToast(msg){
       toast.textContent = msg;
       toast.classList.add("show");
       setTimeout(() => toast.classList.remove("show"), 1200);
     }
+
     function setProgress(){
       const total = steps.length;
       const current = state.index + 1;
@@ -316,8 +326,14 @@
       const pct = Math.round((current - 1) / (total - 1) * 100);
       bar.style.width = pct + "%";
     }
+
     function showError(show){
       error.style.display = show ? "block" : "none";
+    }
+
+    function getReviewUrl_(){
+      const store = String(state.answers.store || "");
+      return REVIEW_URLS[store] || REVIEW_URLS["十三店"];
     }
 
     function render(){
@@ -388,13 +404,14 @@
         cta.className = "ctaBig";
 
         if (!isBad) {
+          const reviewUrl = getReviewUrl_();
           cta.innerHTML =
             '<p class="ctaBigTitle">クチコミ投稿へ</p>' +
             '<p class="ctaBigText">皆様のお声がスタッフの励みになります。</p>' +
-            '<a class="btnlink reviewBtn" href="' + escapeHtml(GOOGLE_REVIEW_URL) + '" target="_blank" rel="noopener">口コミ投稿でドリンク無料！</a>';
+            '<a class="btnlink reviewBtn" href="' + escapeHtml(reviewUrl) + '" target="_blank" rel="noopener">口コミ投稿でドリンク無料！</a>';
         } else {
           cta.innerHTML =
-            '<p class="ctaBigTitle">率直なご意見ありがとうございます。</p>' +
+            '<p class="ctaBigTitle">貴重なご意見ありがとうございます。</p>' +
             '<p class="ctaBigText">いただいたご意見は社内で共有し、改善に努めてまいります。</p>';
         }
 
