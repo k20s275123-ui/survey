@@ -228,7 +228,7 @@
   <script>
     const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyWtiN98arxb2yUQHKY92XG6oCMbf9WssJvsDlnuyUGImd3zNYqoYHz2Mxk19AATEw/exec";
     const GAS_TOKEN = "tokuchan_juso_survey";
-    const CLIENT_VERSION = "tokuchan-survey-v1";
+    const CLIENT_VERSION = "tokuchan-survey-v2-formpayload";
 
     // 店舗ごとの口コミリンク（ここを各店舗のreviewリンクに差し替え）
     const REVIEW_URLS = {
@@ -411,7 +411,7 @@
             '<a class="btnlink reviewBtn" href="' + escapeHtml(reviewUrl) + '" target="_blank" rel="noopener">口コミ投稿でドリンク無料！</a>';
         } else {
           cta.innerHTML =
-            '<p class="ctaBigTitle">貴重なご意見ありがとうございます。</p>' +
+            '<p class="ctaBigTitle">率直なご意見ありがとうございます。</p>' +
             '<p class="ctaBigText">いただいたご意見は社内で共有し、改善に努めてまいります。</p>';
         }
 
@@ -494,11 +494,14 @@
         }
       };
 
+      // 重要：payload=... のフォーム送信に変更（GAS側で確実に拾える）
+      const body = "payload=" + encodeURIComponent(JSON.stringify(payload));
+
       await fetch(GAS_ENDPOINT, {
         method: "POST",
         mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: body
       });
     }
 
